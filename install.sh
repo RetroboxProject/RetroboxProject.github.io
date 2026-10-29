@@ -42,6 +42,8 @@ readonly EXCLUDE_RE='dbgsym|debuginfo|debugsource|\.src\.rpm$'
 readonly ANY_TAG_RE='(debian|ubuntu|fedora)[-_.]?[0-9]|[._-]fc[0-9]+|[._-]el[0-9]+|trixie|bookworm|bullseye|forky|focal|jammy|noble|resolute|oracular|plucky|questing'
 # A regular expression that never matches.
 readonly NEVER_RE='a^'
+# Names of the release assets holding SHA-256 checksums (lower case).
+readonly CHECKSUM_RE='^sha256sums?(\.txt)?$'
 
 FORCE_SOURCE=0
 FAMILY=""
@@ -50,6 +52,8 @@ UBUNTU_TARGET=""
 TMP_DIR=""
 SUDO=()
 DOWNLOAD_URLS=()
+# Checksum file URL of each entry in DOWNLOAD_URLS (empty when none exists).
+CHECKSUM_URLS=()
 
 log() {
   printf '==> %s\n' "$*"
@@ -247,6 +251,11 @@ arch_regexes() {
       printf '%s\n' '\.aarch64\.rpm$'
       ;;
   esac
+  # Architecture-independent packages, used when no CPU-specific one exists.
+  case "${ext}" in
+    deb) printf '%s\n' '[_.-]all\.deb$' ;;
+    rpm) printf '%s\n' '\.noarch\.rpm$' ;;
+  esac
 }
 
 api_get() {
@@ -305,7 +314,7 @@ select_assets() {
 
 # Find the packages to install in the latest release of every component.
 collect_packages() {
-  local ext="$1" tag_re component repo json tag
+  local ext="$1" tag_re component repo json tag url name sums_url
   local -a urls=() chosen=()
   tag_re="$(distro_tag_regex)"
   for component in "${COMPONENTS[@]}"; do
@@ -317,24 +326,70 @@ collect_packages() {
     mapfile -t urls < <(
       sed -n 's/.*"browser_download_url": *"\([^"]*\)".*/\1/p' <<<"${json}"
     )
+    sums_url=""
+    for url in "${urls[@]}"; do
+      name="${url##*/}"
+      if [[ "${name,,}" =~ ${CHECKSUM_RE} ]]; then
+        sums_url="${url}"
+        break
+      fi
+    done
     mapfile -t chosen < <(
       printf '%s\n' "${urls[@]}" | select_assets "${ext}" "${ARCH}" "${tag_re}"
     )
-    ((${#chosen[@]} > 0)) ||
-      die "no .${ext} package for ${ARCH} in the latest ${component} release (${tag:-unknown})"
+    if ((${#chosen[@]} == 0)); then
+      warn "assets found in ${repo} ${tag:-unknown}:"
+      printf '  %s\n' "${urls[@]##*/}" >&2
+      warn "looking for: .${ext}, CPU ${ARCH}, distro match ${tag_re}"
+      die "no matching .${ext} package in the latest ${component} release"
+    fi
     log "Found ${component} ${tag:-unknown}"
-    DOWNLOAD_URLS+=("${chosen[@]}")
+    for url in "${chosen[@]}"; do
+      DOWNLOAD_URLS+=("${url}")
+      CHECKSUM_URLS+=("${sums_url}")
+    done
   done
 }
 
+# Check a downloaded file against a checksum file ("<sha256>  <name>" lines).
+verify_checksum() {
+  local file="$1" sums="$2" name expected actual
+  name="${file##*/}"
+  expected="$(awk -v f="${name}" '
+    { gsub(/\r/, ""); n = $2; sub(/^\*/, "", n); sub(/^.*\//, "", n) }
+    n == f { print tolower($1); exit }
+  ' "${sums}")"
+  [[ -n "${expected}" ]] ||
+    die "${name} is not listed in the release checksum file"
+  actual="$(sha256sum "${file}")"
+  actual="${actual%% *}"
+  [[ "${actual}" == "${expected}" ]] ||
+    die "checksum mismatch for ${name} (expected ${expected}, got ${actual})"
+  log "Verified ${name}"
+}
+
 download_packages() {
-  local url
+  local i url name sums_url
+  local -A sums_files=()
   TMP_DIR="$(mktemp -d)"
   # Let the unprivileged apt sandbox user read the files.
   chmod 755 "${TMP_DIR}"
-  for url in "${DOWNLOAD_URLS[@]}"; do
-    log "Downloading ${url##*/}"
-    curl -fsSL --proto '=https' --tlsv1.2 -o "${TMP_DIR}/${url##*/}" "${url}"
+  for i in "${!DOWNLOAD_URLS[@]}"; do
+    url="${DOWNLOAD_URLS[i]}"
+    name="${url##*/}"
+    sums_url="${CHECKSUM_URLS[i]}"
+    log "Downloading ${name}"
+    curl -fsSL --proto '=https' --tlsv1.2 -o "${TMP_DIR}/${name}" "${url}"
+    if [[ -z "${sums_url}" ]]; then
+      warn "no checksum file in the release of ${name}; skipping verification"
+      continue
+    fi
+    if [[ -z "${sums_files[${sums_url}]:-}" ]]; then
+      sums_files[${sums_url}]="${TMP_DIR}/sums.${i}"
+      curl -fsSL --proto '=https' --tlsv1.2 \
+        -o "${sums_files[${sums_url}]}" "${sums_url}"
+    fi
+    verify_checksum "${TMP_DIR}/${name}" "${sums_files[${sums_url}]}"
   done
   chmod 644 "${TMP_DIR}"/*
 }
@@ -360,6 +415,7 @@ install_packages() {
 install_from_packages() {
   local ext="$1" manager="$2"
   command -v "${manager}" >/dev/null 2>&1 || die "${manager} not found"
+  command -v sha256sum >/dev/null 2>&1 || die "sha256sum not found"
   setup_privileges
   collect_packages "${ext}"
   download_packages
