@@ -312,7 +312,8 @@ collect_packages() {
     repo="${REPO_OF[${component}]}"
     json="$(fetch_latest_release "${repo}")" ||
       die "cannot fetch the latest release of ${repo} (rate limited? set GITHUB_TOKEN)"
-    tag="$(sed -n 's/.*"tag_name": *"\([^"]*\)".*/\1/{p;q}' <<<"${json}")"
+    tag="$(sed -n 's/.*"tag_name": *"\([^"]*\)".*/\1/p' <<<"${json}")"
+    tag="${tag%%$'\n'*}"
     mapfile -t urls < <(
       sed -n 's/.*"browser_download_url": *"\([^"]*\)".*/\1/p' <<<"${json}"
     )
