@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Retrobox – a retro gaming environment for Linux</title>
+  <meta name="description" content="Retrobox is a retro gaming frontend for Linux built on EmulationStation and Batocera's configgen. One place to launch and configure all your emulators.">
+  <meta name="theme-color" content="#0d0221">
+  <meta property="og:title" content="Retrobox">
+  <meta property="og:description" content="A retro gaming environment for Linux, built on EmulationStation and Batocera's configgen.">
+  <meta property="og:type" content="website">
+  <!-- TODO: add og:image and og:url once the domain and a preview image exist -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🕹️</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script src="assets/js/main.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <a class="brand" href="#top">Retrobox</a>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="nav" aria-label="Toggle menu">Menu</button>
+    <nav id="nav" class="nav">
+      <a href="#features">Features</a>
+      <a href="#emulators">Emulators</a>
+      <a href="#screenshots">Screenshots</a>
+      <a href="#install">Install</a>
+      <a href="#community">Community</a>
+      <a class="nav-cta" href="https://github.com/RetroboxProject/retrobox-core">GitHub</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="top">
+      <div class="hero-text">
+        <h1>Retrobox</h1>
+        <p class="lead">Every emulator, one frontend, one config. Retro gaming on Linux that works from the couch.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="#install">Get started</a>
+          <a class="btn" href="https://github.com/RetroboxProject/retrobox-core">View on GitHub</a>
+        </div>
+      </div>
+      <div class="horizon" aria-hidden="true">
+        <div class="sun"></div>
+        <div class="grid"></div>
+      </div>
+    </section>
+
+    <section class="section" id="features">
+      <h2>What you get</h2>
+      <!-- TODO: adjust this list to the real feature set -->
+      <ul class="features">
+        <li class="feature f-pink">
+          <h3>Controller-first frontend</h3>
+          <p>Browse and launch your games with EmulationStation, themes included.</p>
+        </li>
+        <li class="feature f-cyan">
+          <h3>One config for every emulator</h3>
+          <p>Batocera's configgen builds each emulator's settings at launch, per system or per game.</p>
+        </li>
+        <li class="feature f-cyan">
+          <h3>Display options</h3>
+          <p>Resolution, shaders, bezels and a performance overlay without editing config files.</p>
+        </li>
+        <li class="feature f-pink">
+          <h3>Controls and hotkeys</h3>
+          <p>Map your pads once and use the same hotkeys in every emulator.</p>
+        </li>
+        <li class="feature f-pink">
+          <h3>Your own session</h3>
+          <p>Run Retrobox from your desktop and come back to it with one shortcut.</p>
+        </li>
+        <li class="feature f-cyan">
+          <h3>Open source</h3>
+          <p>Read it, fork it, send a patch. Everything lives in retrobox-core.</p>
+        </li>
+      </ul>
+    </section>
+
+    <section class="section" id="emulators">
+      <h2>Supported emulators</h2>
+      <p class="intro">Retrobox drives standalone emulators and RetroArch cores.</p>
+      <!-- TODO: replace with the real list -->
+      <ul class="chips">
+        <li>RetroArch</li>
+        <li>Dolphin</li>
+        <li>PCSX2</li>
+        <li>PPSSPP</li>
+        <li>Cemu</li>
+        <li>ares</li>
+        <li>and more</li>
+      </ul>
+    </section>
+
+    <section class="section" id="screenshots">
+      <h2>Screenshots</h2>
+      <div class="shots">
+        <!-- TODO: replace each figure's placeholder with <img src="assets/img/..." alt="..."> -->
+        <figure class="shot"><span>Game list</span></figure>
+        <figure class="shot"><span>System menu</span></figure>
+        <figure class="shot"><span>In-game overlay</span></figure>
+      </div>
+    </section>
+
+    <section class="section" id="install">
+      <h2>Install</h2>
+      <p class="intro">Clone the repository and run the installer.</p>
+      <!-- TODO: check these commands and add packages (deb/rpm) when available -->
+      <div class="code">
+        <button class="copy" type="button" data-copy="#install-cmd">Copy</button>
+        <pre><code id="install-cmd">git clone https://github.com/RetroboxProject/retrobox-core.git
+cd retrobox-core
+sudo ./install.sh</code></pre>
+      </div>
+      <p class="note">Tested on Debian and Fedora. See the README for requirements and uninstall steps.</p>
+    </section>
+
+    <section class="section" id="community">
+      <h2>Join in</h2>
+      <ul class="links">
+        <li><a href="https://github.com/RetroboxProject/retrobox-core/issues">Report a bug or request a feature</a></li>
+        <li><a href="https://github.com/RetroboxProject/retrobox-core/releases">Download releases</a></li>
+        <li><a href="https://github.com/RetroboxProject/retrobox-core#readme">Read the documentation</a></li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Retrobox is built on code from Batocera and EmulationStation. It does not include games or BIOS files; use only content you own.</p>
+    <p>&copy; <span id="year">2026</span> Retrobox Project. <!-- TODO: add license --></p>
+  </footer>
+</body>
+</html>
