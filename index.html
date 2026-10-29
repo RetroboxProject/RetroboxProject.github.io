@@ -107,15 +107,17 @@
 
     <section class="section" id="install">
       <h2>Install</h2>
-      <p class="intro">Clone the repository and run the installer.</p>
-      <!-- TODO: check these commands and add packages (deb/rpm) when available -->
+      <p class="intro">One command installs the latest release. It picks the right packages for your system.</p>
       <div class="code">
         <button class="copy" type="button" data-copy="#install-cmd">Copy</button>
-        <pre><code id="install-cmd">git clone https://github.com/RetroboxProject/retrobox-core.git
-cd retrobox-core
-sudo ./install.sh</code></pre>
+        <pre><code id="install-cmd">curl -fsSL https://retroboxproject.github.io/install.sh | bash</code></pre>
       </div>
-      <p class="note">Tested on Debian and Fedora. See the README for requirements and uninstall steps.</p>
+      <ul class="links">
+        <li>Debian, Ubuntu and Fedora (and derivatives): installs .deb or .rpm packages with all their dependencies.</li>
+        <li>Ubuntu releases that are not LTS use the packages of the previous LTS.</li>
+        <li>Any other system (Arch, immutable distros, Bazzite...): builds from source. Add <code>--source</code> to force this on any system.</li>
+      </ul>
+      <p class="note">Read the <a href="install.sh">installer script</a> before running it if you prefer. The uninstall steps are in the README.</p>
     </section>
 
     <section class="section" id="community">
