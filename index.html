@@ -9,8 +9,14 @@
   <meta property="og:title" content="Retrobox">
   <meta property="og:description" content="A retro gaming environment for Linux, built on EmulationStation and Batocera's configgen.">
   <meta property="og:type" content="website">
-  <!-- TODO: add og:image and og:url once the domain and a preview image exist -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🕹️</text></svg>">
+  <meta property="og:url" content="https://retroboxproject.github.io/">
+  <meta property="og:image" content="https://retroboxproject.github.io/assets/img/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="assets/img/icon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/img/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="assets/img/icon-180.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600&family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -21,12 +27,12 @@
   <a class="skip" href="#main">Skip to content</a>
 
   <header class="site-header">
-    <a class="brand" href="#top">Retrobox</a>
+    <a class="brand" href="#top"><img src="assets/img/logo.svg" alt="Retrobox" width="198" height="40"></a>
     <button class="nav-toggle" aria-expanded="false" aria-controls="nav" aria-label="Toggle menu">Menu</button>
     <nav id="nav" class="nav">
+      <a href="#tour">Tour</a>
       <a href="#features">Features</a>
       <a href="#emulators">Emulators</a>
-      <a href="#screenshots">Screenshots</a>
       <a href="#install">Install</a>
       <a href="#community">Community</a>
       <a class="nav-cta" href="https://github.com/RetroboxProject/retrobox-core">GitHub</a>
@@ -35,13 +41,30 @@
 
   <main id="main">
     <section class="hero" id="top">
-      <div class="hero-text">
-        <h1>Retrobox</h1>
-        <p class="lead">Every emulator, one frontend, one config. Retro gaming on Linux that works from the couch.</p>
-        <div class="actions">
-          <a class="btn btn-primary" href="#install">Get started</a>
-          <a class="btn" href="https://github.com/RetroboxProject/retrobox-core">View on GitHub</a>
+      <div class="hero-inner">
+        <div class="hero-text">
+          <h1><img class="hero-logo" src="assets/img/logo.svg" alt="Retrobox" width="594" height="120"></h1>
+          <p class="lead">Every emulator, one frontend, one config. Retro gaming on Linux that works from the couch.</p>
+
+          <div class="code code-hero">
+            <button class="copy" type="button" data-copy="#hero-cmd">Copy</button>
+            <pre><code id="hero-cmd">curl -fsSL https://retroboxproject.github.io/<wbr>install.sh | bash</code></pre>
+          </div>
+          <p class="hero-note">Debian, Ubuntu, Fedora or build from source. <a href="#install">Install details</a></p>
+
+          <div class="actions">
+            <a class="btn btn-primary" href="https://github.com/RetroboxProject/retrobox-core">View on GitHub</a>
+            <a class="btn" href="https://github.com/RetroboxProject/retrobox-core/releases">Releases</a>
+          </div>
         </div>
+
+        <figure class="hero-shot shot">
+          <img src="assets/img/screens/systems-960.webp"
+               srcset="assets/img/screens/systems-960.webp 960w, assets/img/screens/systems.webp 1920w"
+               sizes="(max-width: 60rem) 100vw, 40rem"
+               width="1920" height="1080"
+               alt="Retrobox system carousel with the PlayStation selected, showing its controller, description and game count">
+        </figure>
       </div>
       <div class="horizon" aria-hidden="true">
         <div class="sun"></div>
@@ -49,19 +72,47 @@
       </div>
     </section>
 
+    <section class="section" id="tour">
+      <h2>Take a look</h2>
+
+      <article class="showcase">
+        <a class="shot" href="assets/img/screens/gamelist.webp">
+          <img src="assets/img/screens/gamelist-960.webp"
+               srcset="assets/img/screens/gamelist-960.webp 960w, assets/img/screens/gamelist.webp 1920w"
+               sizes="(max-width: 52rem) 100vw, 36rem"
+               width="1920" height="1080" loading="lazy"
+               alt="FinalBurn Neo game list with a screenshot, rating, year, developer, players and description of '88 Games">
+        </a>
+        <div class="showcase-text">
+          <h3>Find the game</h3>
+          <p>Game lists come with screenshots, ratings, release year, developer, number of players and a description, so you know what you are launching.</p>
+        </div>
+      </article>
+
+      <article class="showcase showcase-flip">
+        <a class="shot" href="assets/img/screens/grid.webp">
+          <img src="assets/img/screens/grid-960.webp"
+               srcset="assets/img/screens/grid-960.webp 960w, assets/img/screens/grid.webp 1920w"
+               sizes="(max-width: 52rem) 100vw, 36rem"
+               width="1920" height="1080" loading="lazy"
+               alt="PC gaming collection shown as a grid of box covers">
+        </a>
+        <div class="showcase-text">
+          <h3>PC games too</h3>
+          <p>Your PC games sit next to the consoles, in a cover grid that is easy to browse with a pad or a mouse.</p>
+        </div>
+      </article>
+    </section>
+
     <section class="section" id="features">
       <h2>What you get</h2>
       <!-- TODO: adjust this list to the real feature set -->
       <ul class="features">
-        <li class="feature f-pink">
-          <h3>Controller-first frontend</h3>
-          <p>Browse and launch your games with EmulationStation, themes included.</p>
-        </li>
         <li class="feature f-cyan">
           <h3>One config for every emulator</h3>
           <p>Batocera's configgen builds each emulator's settings at launch, per system or per game.</p>
         </li>
-        <li class="feature f-cyan">
+        <li class="feature f-pink">
           <h3>Display options</h3>
           <p>Resolution, shaders, bezels and a performance overlay without editing config files.</p>
         </li>
@@ -69,11 +120,15 @@
           <h3>Controls and hotkeys</h3>
           <p>Map your pads once and use the same hotkeys in every emulator.</p>
         </li>
-        <li class="feature f-pink">
+        <li class="feature f-cyan">
           <h3>Your own session</h3>
           <p>Run Retrobox from your desktop and come back to it with one shortcut.</p>
         </li>
         <li class="feature f-cyan">
+          <h3>Themes included</h3>
+          <p>EmulationStation themes give every system its own look out of the box.</p>
+        </li>
+        <li class="feature f-pink">
           <h3>Open source</h3>
           <p>Read it, fork it, send a patch. Everything lives in retrobox-core.</p>
         </li>
@@ -93,16 +148,6 @@
         <li>ares</li>
         <li>and more</li>
       </ul>
-    </section>
-
-    <section class="section" id="screenshots">
-      <h2>Screenshots</h2>
-      <div class="shots">
-        <!-- TODO: replace each figure's placeholder with <img src="assets/img/..." alt="..."> -->
-        <figure class="shot"><span>Game list</span></figure>
-        <figure class="shot"><span>System menu</span></figure>
-        <figure class="shot"><span>In-game overlay</span></figure>
-      </div>
     </section>
 
     <section class="section" id="install">
@@ -131,6 +176,7 @@
   </main>
 
   <footer class="site-footer">
+    <img class="footer-icon" src="assets/img/icon.svg" alt="" width="48" height="48">
     <p>Retrobox is built on code from Batocera and EmulationStation. It does not include games or BIOS files; use only content you own.</p>
     <p>&copy; <span id="year">2026</span> Retrobox Project. <!-- TODO: add license --></p>
   </footer>
