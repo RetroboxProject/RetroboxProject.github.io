@@ -26,11 +26,13 @@ readonly -a COMPONENTS=(
   retrobox-core
   retrobox-mangohud
   retrobox-emulationstation
+  retrobox-overlay
   gamepadly
 )
 declare -rA REPO_OF=(
   [retrobox-core]="RetroboxProject/retrobox-core"
   [retrobox-mangohud]="RetroboxProject/retrobox-mangohud"
+  [retrobox-overlay]="RetroboxProject/retrobox-overlay"
   [retrobox-emulationstation]="RetroboxProject/retrobox-emulationstation"
   [gamepadly]="RetroboxProject/gamepadly"
 )
