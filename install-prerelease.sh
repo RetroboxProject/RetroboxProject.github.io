@@ -30,14 +30,12 @@ readonly -a COMPONENTS=(
   retrobox-mangohud
   retrobox-emulationstation
   retrobox-overlay
-  gamepadly
 )
 declare -rA REPO_OF=(
   [retrobox-core]="RetroboxProject/retrobox-core"
   [retrobox-mangohud]="RetroboxProject/retrobox-mangohud"
   [retrobox-overlay]="RetroboxProject/retrobox-overlay"
   [retrobox-emulationstation]="RetroboxProject/retrobox-emulationstation"
-  [gamepadly]="RetroboxProject/gamepadly"
 )
 
 # Release assets that must never be installed.
@@ -422,6 +420,21 @@ install_packages() {
   esac
 }
 
+# Packages Retrobox installed before and no longer uses: left in place (they
+# may be used on their own), but named so they can be removed.
+readonly -a RETIRED_PACKAGES=(python3-gamepadly)
+
+note_retired_packages() {
+  local ext="$1" package
+  for package in "${RETIRED_PACKAGES[@]}"; do
+    case "${ext}" in
+      deb) dpkg-query -W -f='${Status}' "${package}" 2>/dev/null | grep -q 'ok installed' ;;
+      rpm) rpm -q "${package}" >/dev/null 2>&1 ;;
+    esac || continue
+    log "${package} is no longer used by Retrobox (retrobox-overlay's input daemon replaced it); remove it if nothing else needs it"
+  done
+}
+
 install_from_packages() {
   local ext="$1" manager="$2"
   command -v "${manager}" >/dev/null 2>&1 || die "${manager} not found"
@@ -430,6 +443,7 @@ install_from_packages() {
   collect_packages "${ext}"
   download_packages
   install_packages "${ext}"
+  note_retired_packages "${ext}"
   log "Retrobox installed. Start it with: retrobox"
 }
 
